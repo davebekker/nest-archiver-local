@@ -13,7 +13,7 @@ load_dotenv()
 GOOGLE_MASTER_TOKEN = os.getenv("GOOGLE_MASTER_TOKEN")
 GOOGLE_USERNAME = os.getenv("GOOGLE_USERNAME")
 DOWNLOAD_PATH = "./downloads"
-REFRESH_EVERY_X_MINUTES = 2
+REFRESH_EVERY_X_MINUTES = 30
 
 if not os.path.exists(DOWNLOAD_PATH):
     os.makedirs(DOWNLOAD_PATH)
