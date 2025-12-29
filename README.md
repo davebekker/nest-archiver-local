@@ -22,7 +22,6 @@ This fork transforms the original script into a resilient, long-term monitoring 
 ```
 
 2. **Get a Google "Master Token"**
-
 You will need a Master Token to authenticate. It is recommended to use a Google One-Time Password for this: 
 ```bash
 docker run --rm -it breph/ha-google-home_get-token
@@ -45,4 +44,6 @@ The script requires a state.json file. Ensure it contains at least an empty JSON
 
 5. **Run the Service**
 
-```python python3 main.py ```
+```python 
+python3 main.py
+```
