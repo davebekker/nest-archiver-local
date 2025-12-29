@@ -1,85 +1,48 @@
+# Google Nest Camera Local Archiver
 
-# Google Nest Camera Videos <--> Telegram Channel
+## Credits & Attribution
+This project is an updated version of the [original Google Nest Archiver](https://github.com/tamirmayer/google-nest-camera-telegram-sync) created by **Tamir Mayer**. The core connection logic and Nest API wrappers remain based on their excellent research into the Google HomeGraph.
 
-<a href="https://buymeacoffee.com/tamirmayer" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+---
 
+## 🚀 Key Improvements in this Version
+This fork transforms the original script into a resilient, long-term monitoring service:
 
-This is a module created after a joyfull project I've researched. 
-You can find the full story [here](https://medium.com/@tamirmayer/google-nest-camera-internal-api-fdf9dc3ce167)
+- **Individual Camera Persistence**: Uses a `state.json` file to track the last sync time for every camera independently.
+- **Auto-Recovery**: If the service goes offline, it automatically calculates the gap and "catches up" on all missed events upon restart.
+- **Signal Messenger Integration**: Upgraded for `signal-cli-rest-api` v2, sending high-quality video alerts via Base64.
+- **Automated Storage Maintenance**: Automatically deletes clips older than 30 days or when the archive exceeds a set size (e.g., 10GB).
+- **Notification Filtering**: Silently archives all motion while only sending Signal alerts for specific cameras (e.g., "Nursery" or "Backyard").
 
-If you wan't to download your Google Home Nest Cameras videos locally (And tired of paying the monthly Nest Aware Subscription) - this is the script your are looking for.
+## Usage & Configuration
 
-I found it no-where else.
+1. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+```
 
-Specifically I needed to send the videos to a Telegram Channel, but feel free to do whatever you need with that.
+2. **Get a Google "Master Token"**
 
-This module is for personal use only. Using it is at your own risk!
-## You Will Be Able To:
-
-- Get your **Google Home devices using HomeGraph**
-- Retrieve your recent **Google Nest events**
-- **Download full-quality Google Nest video clips**
-- Send those clips to a Telegram channel you choose
-
-
-## Usage:
-
-* Start with:
+You will need a Master Token to authenticate. It is recommended to use a Google One-Time Password for this: 
 ```bash
-  pip install -r requirements.txt
+docker run --rm -it breph/ha-google-home_get-token
 ```
 
-* Get a Google "Master Token", you may consider to use a Google One-Time Password for that:
+3. **Setup Environment (.env)**
 
-```bash
-  docker run --rm -it breph/ha-google-home_get-token
+Create a .env file in the root directory: 
+```dotenv 
+GOOGLE_MASTER_TOKEN="aas_..." 
+GOOGLE_USERNAME="youremailaddress@gmail.com" 
+SIGNAL_NUMBER="+123456789" 
+RECIPIENT_NUMBER="+123456789" # Can be a phone number or Signal Group ID 
+DOWNLOAD_PATH="./downloads"
 ```
 
-* Create a .env file in the following format
+4. **Initialize State**
 
-```dotenv
-GOOGLE_MASTER_TOKEN="aas_..."
-GOOGLE_USERNAME="youremailaddress@gmail.com"
-TELEGRAM_BOT_TOKEN="token..."
-TELEGRAM_CHANNEL_ID="-100..."
-```
+The script requires a state.json file. Ensure it contains at least an empty JSON object: ```bash echo "{}" > state.json ```
 
-* Then run:
+5. **Run the Service**
 
-```bash
-  python3 main.py
-```
-
-
-## Example:
-
-```javascript
-from google_auth_wrapper import GoogleConnection
-
-google_connection = GoogleConnection(
-    GOOGLE_MASTER_TOKEN, 
-    GOOGLE_USERNAME
-)
-
-nest_camera_devices = google_connection.get_nest_camera_devices()
-
-for nest_device in self._nest_camera_devices:
-    # Get all the events
-    events = nest_device.get_events(
-            end_time = pytz.timezone("US/Central").localize(datetime.datetime.now()),
-            duration_minutes=3 * 60 # 3 Hours
-        )
-
-    for event in events:
-        # Returns the bytes of the .mp4 video
-        video_data = nest_device.download_camera_event(event)
-        
-```
-
-<a href="https://buymeacoffee.com/tamirmayer" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
-## Credits:
-
-Much credits for the authors of the [**glocaltokens**](https://github.com/leikoilja/glocaltokens) module
-
-Thanks also for the authors of the docker [**ha-google-home_get-token**](https://hub.docker.com/r/breph/ha-google-home_get-token)
+```python python3 main.py ```
