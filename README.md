@@ -17,11 +17,12 @@ This fork transforms the original script into a resilient, long-term monitoring 
 ## Usage & Configuration
 
 1. **Install Dependencies**:
-   ```bash
+```bash
    pip install -r requirements.txt
 ```
 
 2. **Get a Google "Master Token"**
+
 You will need a Master Token to authenticate. It is recommended to use a Google One-Time Password for this: 
 ```bash
 docker run --rm -it breph/ha-google-home_get-token
