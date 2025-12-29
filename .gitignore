@@ -4,6 +4,7 @@ downloads/
 signal-data/
 __pycache__/
 *.mp4
+state.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
